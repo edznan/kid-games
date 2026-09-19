@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="bs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#fdf6e7">
+<title>Riječica — bosanski za djecu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#3a2d23; --paper:#fdf6e7; --card:#fffdf6;
+    --red:#ff6b57; --orange:#ff9b42; --yellow:#ffc93c;
+    --green:#59b85e; --blue:#4fb0d6; --pink:#f78fb3; --purple:#9b5dbb;
+    --shadow:rgba(58,45,35,.85);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:'Baloo 2','Trebuchet MS',sans-serif;
+    background:var(--paper) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26'%3E%3Ccircle cx='2' cy='2' r='1.5' fill='%233a2d23' fill-opacity='.06'/%3E%3C/svg%3E");
+    color:var(--ink);
+    min-height:100vh;
+    user-select:none;-webkit-user-select:none;
+    overflow-x:hidden;
+  }
+  button{font:inherit;color:inherit;background:none;border:none;padding:0;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+  main{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:10px 16px 170px}
+
+  /* ---------- floating background doodles ---------- */
+  #doodles{position:fixed;inset:0;pointer-events:none;z-index:0}
+  .dood{position:absolute;opacity:.08;animation:floaty 7s ease-in-out infinite alternate}
+
+  /* ---------- fixed controls ---------- */
+  .fabs{position:fixed;top:12px;right:12px;display:flex;gap:10px;z-index:65}
+  .icon-btn{width:48px;height:48px;border-radius:50%;background:var(--card);border:3px solid var(--ink);
+    box-shadow:3px 4px 0 var(--shadow);display:grid;place-items:center;flex:none;transition:transform .12s}
+  .icon-btn:active{transform:translate(1px,2px);box-shadow:1px 1px 0 var(--shadow)}
+  .icon-btn svg{width:24px;height:24px}
+  .icon-btn.small{width:42px;height:42px}
+  .icon-btn.small svg{width:20px;height:20px}
+
+  /* ---------- hero / home ---------- */
+  .hero{text-align:center;padding:30px 0 4px}
+  .logorow{display:flex;justify-content:center;align-items:flex-end;gap:6px}
+  .logo{font-size:clamp(2.9rem,11vw,4.5rem);margin:0;font-weight:800;line-height:1;letter-spacing:.5px}
+  .logo .lt{-webkit-text-stroke:2px var(--ink);text-shadow:4px 4px 0 rgba(58,45,35,.12)}
+  .hero-parrot{width:clamp(64px,14vw,92px);flex:none;margin-bottom:-6px}
+  .hero-parrot .parrot{animation:bob 2.4s ease-in-out infinite}
+  .squig{display:block;margin:2px auto 0}
+  .sub{font-size:1.15rem;font-weight:700;margin:14px 0 2px}
+  .sub .en{color:rgba(58,45,35,.55);font-weight:600}
+  .hint{text-align:center;color:rgba(58,45,35,.72);font-weight:600;margin:10px 0 0;font-size:1rem}
+  .hint .en{color:rgba(58,45,35,.45)}
+  .lt{display:inline-block;animation:popin .42s backwards}
+
+  /* ---------- home tiles (sticker collage) ---------- */
+  .tiles{display:flex;flex-wrap:wrap;gap:22px;justify-content:center;padding:26px 0 20px;max-width:660px;margin:0 auto}
+  .tile{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:8px;width:262px;
+    min-height:198px;padding:18px 18px 14px;text-align:left;background:var(--card);
+    border:3px solid var(--ink);border-radius:24px;box-shadow:6px 7px 0 var(--acc);
+    transform:rotate(var(--tilt));transition:transform .25s cubic-bezier(.34,1.56,.64,1)}
+  .tile:hover{transform:rotate(0deg) translateY(-4px)}
+  .tile:active{transform:rotate(var(--tilt)) scale(.96)}
+  .tile.hero{width:min(560px,100%);min-height:0;flex-direction:row;align-items:center;gap:14px}
+  .tname{font-size:1.35rem;font-weight:800;display:block;line-height:1.1}
+  .ten{font-size:.85rem;color:rgba(58,45,35,.6);font-weight:600}
+  .tile.hero .tcol{display:flex;flex-direction:column;gap:4px}
+  .tprev{display:flex;gap:8px;margin-top:4px}
+  .tile.hero .tprev{margin-left:auto;flex-wrap:wrap;justify-content:flex-end;max-width:230px}
+  .mini{width:52px;height:52px;background:var(--paper);border:2.5px solid var(--ink);border-radius:14px;
+    display:grid;place-items:center;padding:4px;box-shadow:2px 3px 0 rgba(58,45,35,.45)}
+  .mini svg{width:100%;height:100%}
+  .tile.hero .mini{width:60px;height:60px}
+  .mini.q{font-size:1.5rem;font-weight:800;color:var(--red)}
+  .mini.spk svg{width:26px;height:26px}
+  .mini.backm{background:var(--yellow)}
+  .tstars{display:inline-flex;align-items:center;gap:6px;background:#fff3d6;border:2.5px solid var(--ink);
+    border-radius:999px;padding:2px 12px 2px 8px;font-weight:800;font-size:.95rem;margin-top:auto}
+
+  /* ---------- game shell ---------- */
+  .topbar{display:grid;grid-template-columns:52px 1fr 52px;align-items:center;padding:12px 110px 2px 2px}
+  @media(max-width:560px){.topbar{padding-right:8px}}
+  .gtitle{margin:0;text-align:center;font-size:1.45rem;font-weight:800}
+  .prog{display:flex;gap:3px;justify-content:center;margin:4px 0 6px;flex-wrap:wrap}
+
+  .catbar{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:10px 0 0}
+  .pill{border:3px solid var(--ink);border-radius:999px;padding:7px 18px;font-weight:800;font-size:.98rem;
+    background:var(--card);box-shadow:3px 3px 0 var(--shadow);transition:transform .12s}
+  .pill:active{transform:translate(1px,2px)}
+  .pill.on{background:var(--pbg,#ffc93c);color:var(--pfg,#3a2d23)}
+
+  .switch,.sw{display:inline-flex;align-items:center;gap:10px;font-weight:700;cursor:pointer}
+  .switch input,.sw input{display:none}
+  .switch i,.sw i{width:54px;height:30px;border:3px solid var(--ink);border-radius:999px;background:#e7dcc8;position:relative;transition:.2s;flex:none}
+  .switch i::after,.sw i::after{content:'';position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;
+    background:var(--card);border:2.5px solid var(--ink);transition:.2s}
+  .switch input:checked+i,.sw input:checked+i{background:var(--green)}
+  .switch input:checked+i::after,.sw input:checked+i::after{left:26px}
+  .switch{margin:14px auto 0;width:max-content;font-size:1rem}
+
+  /* ---------- vocabulary board ---------- */
+  .board{display:grid;grid-template-columns:repeat(auto-fill,minmax(114px,1fr));gap:14px;margin-top:18px}
+  .card{background:var(--card);border:3px solid var(--ink);border-radius:20px;box-shadow:4px 5px 0 var(--shadow);
+    padding:10px 8px;cursor:pointer;transition:transform .15s}
+  .card:active{transform:scale(.94)}
+  .card .art{padding:2px}
+  .art svg{width:100%;height:auto;display:block}
+  .card .lbl{text-align:center;font-weight:800;font-size:1.02rem;margin-top:6px}
+  .bump{animation:bump .5s}
+  .shake{animation:shake .45s}
+
+  /* ---------- quiz stage ---------- */
+  .stage{width:min(320px,80vw);margin:16px auto 0;background:var(--card);border:3px solid var(--ink);
+    border-radius:26px;box-shadow:6px 7px 0 var(--shadow);padding:22px}
+  .stage-art svg{width:100%;height:auto;display:block}
+  .chips{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-top:24px}
+  .chip{font-weight:800;font-size:1.35rem;padding:12px 26px;background:var(--card);border:3px solid var(--ink);
+    border-radius:999px;box-shadow:4px 5px 0 var(--shadow);transition:transform .12s}
+  .chip:active{transform:translate(1px,2px);box-shadow:1px 2px 0 var(--shadow)}
+  .chip.ok{background:#d9f0d0}
+  .chip.dim{opacity:.32;pointer-events:none}
+  .chip.num{font-size:1.8rem;min-width:78px;text-align:center;padding:8px 20px}
+
+  /* ---------- listen & find ---------- */
+  .listen-top{display:flex;justify-content:center;align-items:center;margin-top:18px}
+  .speakbtn{width:118px;height:118px;border-radius:50%;background:var(--yellow);border:4px solid var(--ink);
+    box-shadow:6px 7px 0 var(--shadow);display:grid;place-items:center;transition:transform .12s;animation:bob 2.6s ease-in-out infinite}
+  .speakbtn:active{transform:scale(.93)}
+  .speakbtn svg{width:52px;height:52px}
+  .mini-parrot{width:64px;margin-left:-16px;margin-top:34px;position:relative;z-index:1}
+  .mini-parrot .parrot{width:100%;height:auto}
+  .saycap{text-align:center;font-weight:700;color:rgba(58,45,35,.65);margin:8px 0 4px;font-size:.95rem}
+  .picgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:440px;margin:12px auto 0}
+  .pcard{background:var(--card);border:3px solid var(--ink);border-radius:20px;box-shadow:4px 5px 0 var(--shadow);
+    padding:12px;transition:transform .15s}
+  .pcard:active{transform:scale(.94)}
+  .pcard.ok{border-color:var(--green);background:#eef8e9}
+
+  /* ---------- memory ---------- */
+  .memgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:430px;margin:16px auto 0}
+  .mcard{aspect-ratio:5/6;perspective:800px}
+  .mcard .min{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .45s cubic-bezier(.4,1.3,.6,1)}
+  .mcard.flip .min,.mcard.done .min{transform:rotateY(180deg)}
+  .mcard.done{animation:wiggle .55s}
+  .mface{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border:3px solid var(--ink);
+    border-radius:16px;box-shadow:3px 4px 0 var(--shadow);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px}
+  .mface.backc{background:var(--yellow)}
+  .mface.frontc{background:var(--card);transform:rotateY(180deg)}
+  .mcard.done .frontc{border-color:var(--green);box-shadow:3px 4px 0 rgba(89,184,94,.9)}
+  .mface .art{width:66%}
+  .mlbl{font-size:.72rem;font-weight:800;margin-top:2px}
+
+  /* ---------- counting ---------- */
+  .countbox{position:relative;height:clamp(240px,58vw,320px);max-width:470px;margin:16px auto 0;
+    background:var(--card);border:3px solid var(--ink);border-radius:26px;box-shadow:6px 7px 0 var(--shadow);overflow:hidden}
+  .cnt{position:absolute;width:clamp(54px,16vw,76px);transform:translate(-50%,-50%) rotate(var(--r));cursor:pointer}
+  .cnt svg{width:100%;height:auto;display:block}
+  .cnt-say{position:absolute;top:10px;right:10px}
+  .cbadge{position:absolute;top:-10px;right:-10px;width:27px;height:27px;border-radius:50%;background:var(--yellow);
+    border:3px solid var(--ink);display:grid;place-items:center;font-weight:800;font-size:.9rem;animation:starpop .35s}
+
+  /* ---------- alphabet ---------- */
+  .abctools{display:flex;justify-content:center;margin-top:14px}
+  .abcgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:12px;margin-top:16px}
+  .atile{background:var(--card);border:3px solid var(--ink);border-radius:18px;box-shadow:4px 5px 0 var(--shadow);
+    padding:10px 6px 8px;display:flex;flex-direction:column;align-items:center;gap:2px;transition:transform .15s,background .2s}
+  .atile:active{transform:scale(.92)}
+  .atile .al{font-size:1.9rem;font-weight:800;line-height:1.05}
+  .atile .aa{width:48px;margin:4px 0 2px}
+  .atile .aa svg{width:100%;height:auto;display:block}
+  .atile .aw{font-size:.72rem;font-weight:700;color:rgba(58,45,35,.65)}
+  .atile.sing{background:#ffe9a8;box-shadow:4px 5px 0 var(--red);animation:wiggle .6s ease-in-out infinite}
+
+  /* ---------- sentences ---------- */
+  .scard{display:flex;align-items:center;gap:12px;background:var(--card);border:3px solid var(--ink);border-radius:20px;
+    box-shadow:4px 5px 0 var(--shadow);padding:10px 12px;margin-top:12px}
+  .scard .sart{width:74px;flex:none}
+  .scard .sart svg{width:100%;height:auto;display:block}
+  .stx{flex:1;min-width:0}
+  .swords{display:flex;flex-wrap:wrap;gap:2px 9px}
+  .sword{font-weight:800;font-size:1.22rem;padding:2px 1px;border-bottom:3px dotted rgba(58,45,35,.4);line-height:1.25}
+  .sword:active{color:var(--red);border-bottom-color:var(--red)}
+  .sen{font-size:.82rem;font-weight:600;color:rgba(58,45,35,.55);margin-top:2px}
+  .splay{flex:none}
+  .bline{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center;min-height:56px;margin-top:16px}
+  .bslot{min-width:68px;height:48px;border:3px dashed rgba(58,45,35,.35);border-radius:14px}
+  .bfill{height:48px;display:grid;place-items:center;padding:0 16px;font-weight:800;font-size:1.25rem;background:var(--yellow);
+    border:3px solid var(--ink);border-radius:14px;box-shadow:3px 4px 0 var(--shadow);animation:popin .35s}
+  .brep{margin:12px auto 0}
+
+  /* ---------- word bubble + parrot ---------- */
+  #bubble{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);display:flex;align-items:center;gap:12px;
+    background:var(--card);border:3px solid var(--ink);border-radius:22px;box-shadow:5px 6px 0 var(--shadow);
+    padding:10px 16px;z-index:60;max-width:94vw;transition:transform .45s cubic-bezier(.34,1.56,.64,1)}
+  #bubble.hidden{transform:translate(-50%,190%)}
+  .bpar{width:54px;flex:none}
+  .bpar .parrot{width:100%;height:auto}
+  .bword{font-size:clamp(1.5rem,5.4vw,2.1rem);font-weight:800;max-width:60vw;line-height:1.15;text-align:center}
+  .parrot{display:block}
+  body.talking .beak-lo{animation:chirp .16s infinite alternate;transform-origin:75% 30%}
+  body.talking .parrot{animation:bob .22s ease-in-out infinite alternate}
+
+  /* ---------- overlays / modal / toast ---------- */
+  .modal{position:fixed;inset:0;z-index:80;background:rgba(58,45,35,.45);display:grid;place-items:center;padding:16px}
+  .modal.hidden{display:none}
+  .mcard2,.ovcard{background:var(--card);border:3px solid var(--ink);border-radius:26px;box-shadow:8px 9px 0 var(--shadow);
+    padding:22px;width:min(92vw,390px);animation:popin .4s}
+  .mhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+  .mhead h3{margin:0;font-size:1.3rem}
+  .en{color:rgba(58,45,35,.55);font-weight:600;font-size:.85em}
+  .mlab{font-weight:800;display:block;margin-top:8px}
+  .sel{width:100%;padding:10px 12px;border:3px solid var(--ink);border-radius:14px;font:inherit;font-weight:700;background:#fff;margin-top:6px;max-width:100%}
+  .note{font-size:.84rem;color:rgba(58,45,35,.65);margin:10px 0 0;font-weight:600;line-height:1.35}
+  .mrow{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:2px dashed rgba(58,45,35,.18);font-weight:700}
+  .mrow:last-of-type{border-bottom:none}
+  .btn{font-weight:800;font-size:1.05rem;padding:11px 20px;border:3px solid var(--ink);border-radius:16px;
+    background:var(--yellow);box-shadow:4px 5px 0 var(--shadow);display:inline-flex;align-items:center;gap:8px;transition:transform .12s}
+  .btn:active{transform:translate(1px,2px);box-shadow:1px 2px 0 var(--shadow)}
+  .btn.alt{background:var(--card)}
+  .btn svg{width:20px;height:20px}
+  #settings .btn{margin-top:14px}
+
+  .ovcard{text-align:center}
+  .ovstars{display:flex;justify-content:center;gap:6px;margin-bottom:6px}
+  .ovstar{display:inline-block;animation:starpop .55s backwards}
+  .ovtitle{font-size:2.7rem;font-weight:800;line-height:1.1;margin:4px 0}
+  .ovtitle .lt{-webkit-text-stroke:2px var(--ink)}
+  .ovsub{font-weight:700;color:rgba(58,45,35,.7);margin-bottom:18px}
+  .ovbtns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+
+  #toast{position:fixed;top:14px;left:50%;transform:translate(-50%,-90px);transition:transform .3s;background:var(--ink);
+    color:#fffdf6;padding:10px 20px;border-radius:16px;font-weight:700;z-index:90;box-shadow:4px 5px 0 rgba(58,45,35,.35)}
+  #toast.show{transform:translate(-50%,0)}
+
+  .cf{position:fixed;z-index:70;pointer-events:none;will-change:transform}
+  .c-dot{border-radius:50%}
+  .c-star{clip-path:polygon(50% 0,63% 34%,100% 37%,72% 59%,82% 100%,50% 76%,18% 100%,28% 59%,0 37%,37% 34%)}
+  .c-petal{border-radius:70% 70% 70% 8%}
+
+  /* ---------- keyframes ---------- */
+  @keyframes bump{0%{transform:scale(1)}30%{transform:scale(1.13) rotate(-5deg)}60%{transform:scale(.94) rotate(3deg)}100%{transform:scale(1)}}
+  @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px) rotate(-2deg)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(3px)}}
+  @keyframes popin{0%{transform:translateY(26px) scale(.2);opacity:0}70%{transform:translateY(-4px) scale(1.15)}100%{transform:none;opacity:1}}
+  @keyframes chirp{from{transform:translateY(0) rotate(0)}to{transform:translateY(3px) rotate(11deg)}}
+  @keyframes bob{from{transform:translateY(0)}to{transform:translateY(-4px)}}
+  @keyframes wiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-6deg)}75%{transform:rotate(6deg)}}
+  @keyframes floaty{0%,100%{transform:translateY(0) rotate(var(--r,0deg))}50%{transform:translateY(-9px) rotate(var(--r,0deg))}}
+  @keyframes starpop{0%{transform:scale(0) rotate(-40deg)}70%{transform:scale(1.3)}100%{transform:scale(1)}}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.001s!important;transition-duration:.001s!important}}
+</style>
+</head>
+<body>
+<div id="doodles"></div>
+<main id="app"></main>
+<script>
+'use strict';
+/* ================= helpers ================= */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+let uid=0;
+const A=s=>s.replace(/%ID%/g,'i'+(uid++));
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const sample=(a,n)=>shuffle(a).slice(0,n);
+const without=(a,x)=>a.filter(i=>i.word!==x.word);
+const PALL=['#e5484d','#ff8c3a','#d99e00','#55a849','#3572d6','#9b5dbb','#f272a8'];
+
+/* ================= sound effects (Web Audio) ================= */
+let AC=null,MUTED=localStorage.getItem('rijMute')==='1',
+    SFXON=localStorage.getItem('rijSfx')!=='0',
+    TTSON=localStorage.getItem('rijTts')!=='0',
+    SENT=localStorage.getItem('rijSent')==='1';
+function ac(){if(!AC)AC=new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();return AC}
+function tone(f,delay,dur,type='sine',vol=.2,glide){
+  if(MUTED||!SFXON)return;
+  try{
+    const a=ac(),t=a.currentTime+delay,o=a.createOscillator(),g=a.createGain();
+    o.type=type;o.frequency.setValueAtTime(f,t);
+    if(glide)o.frequency.exponentialRampToValueAtTime(glide,t+dur);
+    g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+.012);
+    g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+    o.connect(g).connect(a.destination);o.start(t);o.stop(t+dur+.05);
+  }catch(e){}
+}
+const sfx={
+  pop(){tone(560,0,.13,'triangle',.28,170)},
+  good(){[523.25,659.25,783.99].forEach((f,i)=>tone(f,i*.09,.16,'sine',.22))},
+  bad(){tone(220,0,.14,'sine',.13,180);tone(165,.14,.2,'sine',.13,120)},
+  flip(){tone(360,0,.07,'square',.06,290)},
+  win(){[523.25,659.25,783.99,1046.5].forEach((f,i)=>tone(f,i*.13,.2,'sine',.22));tone(1046.5,.55,.6,'sine',.16)}
+};
+document.addEventListener('pointerdown',()=>{try{ac()}catch(e){}},{once:true});
+
+/* ================= speech (Web Speech API) ================= */
+let voices=[],voiceName=localStorage.getItem('rijVoice')||'',hasBos=false;
+function refreshVoices(){
+  if(!('speechSynthesis' in window))return;
+  voices=speechSynthesis.getVoices();
+  hasBos=voices.some(v=>/^bs/i.test(v.lang))||voices.some(v=>/^(hr|sr|sh)/i.test(v.lang));
+}
+if('speechSynthesis' in window){
+  speechSynthesis.onvoiceschanged=refreshVoices;refreshVoices();
+  setTimeout(refreshVoices,400);setTimeout(refreshVoices,1500);
+}
+function pickVoice(){
+  if(voiceName){const v=voices.find(v=>v.name===voiceName);if(v)return v}
+  for(const p of ['bs','hr','sr','sh']){
+    const v=voices.find(v=>v.lang.toLowerCase().replace('_','-').startsWith(p));
+    if(v)return v;
+  }
+  return voices[0]||null;
+}
+function speak(text,rate){
+  if(MUTED||!TTSON||!('speechSynthesis' in window))return;
+  const s=speechSynthesis;s.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  const v=pickVoice();
+  if(v){u.voice=v;u.lang=v.lang}else u.lang='bs-BA';
+  u.rate=rate||.85;u.pitch=1.05;
+  u.onstart=()=>document.body.classList.add('talking');
+  u.onend=u.onerror=()=>document.body.classList.remove('talking');
+  setTimeout(()=>s.speak(u),60);
+}
+const cancelSpeech=()=>{if('speechSynthesis' in window)speechSynthesis.cancel();document.body.classList.remove('talking')};
+
+/* ================= hand-drawn SVG art ================= */
+const INK='#3a2d23';
+const svgWrap=inner=>`<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg"><g stroke="${INK}" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">${inner}</g></svg>`;
+const face=(x1,x2,y,my,fg=INK)=>`<circle cx="${x1}" cy="${y}" r="4.2" fill="${fg}" stroke="none"/><circle cx="${x2}" cy="${y}" r="4.2" fill="${fg}" stroke="none"/><path d="M${(x1+x2)/2-8} ${my} q8 8 16 0" fill="none" stroke="${fg}" stroke-width="4.5"/>`;
+const blob=c=>svgWrap(`<path d="M60 16c9 0 12 9 21 10 11 1 18 11 14 20-3 8 5 13 3 22-2 10-12 11-17 18-5 8-15 9-23 5-9 4-19 2-23-6-5-8-14-9-15-19-1-9 7-14 5-22-2-10 5-18 15-19 10-1 12-9 20-9z" fill="${c}"/>${face(47,73,52,66,c==='#3f3d4d'?'#fffdf6':INK)}`);
+
+const ART={};
+ART.pas=svgWrap(`
+ <path d="M31 40 C19 47 20 72 33 77 C40 80 45 71 43 58" fill="#b47b4b"/>
+ <path d="M89 40 C101 47 100 72 87 77 C80 80 75 71 77 58" fill="#b47b4b"/>
+ <circle cx="60" cy="61" r="32" fill="#e2a96b"/>
+ <ellipse cx="60" cy="76" rx="17" ry="12" fill="#f8ecd3"/>
+ <circle cx="60" cy="70" r="5.5" fill="${INK}" stroke="none"/>
+ <circle cx="47" cy="52" r="4.2" fill="${INK}" stroke="none"/><circle cx="73" cy="52" r="4.2" fill="${INK}" stroke="none"/>
+ <path d="M60 75 q-6 7 -12 2 M60 75 q6 7 12 2" fill="none" stroke-width="4.5"/>
+ <circle cx="41" cy="66" r="4.5" fill="#f2a3a3" stroke="none" opacity=".8"/><circle cx="79" cy="66" r="4.5" fill="#f2a3a3" stroke="none" opacity=".8"/>`);
+ART.macka=svgWrap(`
+ <path d="M34 42 L37 15 L57 31 Z" fill="#f0a45c"/><path d="M86 42 L83 15 L63 31 Z" fill="#f0a45c"/>
+ <path d="M40 36 L41.5 25 L51 32 Z" fill="#f9c8d4" stroke-width="3.5"/><path d="M80 36 L78.5 25 L69 32 Z" fill="#f9c8d4" stroke-width="3.5"/>
+ <circle cx="60" cy="62" r="31" fill="#f0a45c"/>
+ <path d="M52 35 v8 M60 32 v10 M68 35 v8" fill="none" stroke-width="4.5"/>
+ <circle cx="48" cy="57" r="4.2" fill="${INK}" stroke="none"/><circle cx="72" cy="57" r="4.2" fill="${INK}" stroke="none"/>
+ <path d="M55 66 h10 l-5 7 z" fill="${INK}" stroke="none"/>
+ <path d="M60 73 q-5 6 -10 2 M60 73 q5 6 10 2" fill="none" stroke-width="4"/>
+ <path d="M29 60 L13 55 M30 69 L14 71 M91 60 L107 55 M90 69 L106 71" fill="none" stroke-width="3.5"/>
+ <circle cx="42" cy="70" r="4.5" fill="#f6a9b8" stroke="none"/><circle cx="78" cy="70" r="4.5" fill="#f6a9b8" stroke="none"/>`);
+ART.krava=svgWrap(`
+ <path d="M36 34 q-11 -3 -9 -15 q9 2 13 11" fill="#e8d4b3"/><path d="M84 34 q11 -3 9 -15 q-9 2 -13 11" fill="#e8d4b3"/>
+ <ellipse cx="27" cy="45" rx="10" ry="7" fill="#e8d4b3" transform="rotate(-20 27 45)"/>
+ <ellipse cx="93" cy="45" rx="10" ry="7" fill="#e8d4b3" transform="rotate(20 93 45)"/>
+ <circle cx="60" cy="60" r="32" fill="#fdf8ee"/>
+ <path d="M44 33 q18 -9 27 3 q7 11 -5 16 q-17 6 -22 -19z" fill="#cf9a63" stroke="none"/>
+ <circle cx="48" cy="52" r="4.2" fill="${INK}" stroke="none"/><circle cx="72" cy="52" r="4.2" fill="${INK}" stroke="none"/>
+ <ellipse cx="60" cy="77" rx="19" ry="13" fill="#f6b8c6"/>
+ <circle cx="52" cy="75" r="3.4" fill="${INK}" stroke="none"/><circle cx="68" cy="75" r="3.4" fill="${INK}" stroke="none"/>
+ <path d="M52 83 q8 5 16 0" fill="none" stroke-width="4"/>`);
+ART.konj=svgWrap(`
+ <path d="M43 28 L47 9 L59 25 Z" fill="#a9683f"/><path d="M77 28 L73 9 L61 25 Z" fill="#a9683f"/>
+ <path d="M47.5 23 L49 15 L55 22 Z" fill="#e8b087" stroke-width="3"/><path d="M72.5 23 L71 15 L65 22 Z" fill="#e8b087" stroke-width="3"/>
+ <circle cx="60" cy="60" r="31" fill="#a9683f"/>
+ <path d="M47 27 q13 -12 26 0 q-6 9 -13 9 q-7 0 -13 -9z" fill="#5d3a22"/>
+ <circle cx="48" cy="52" r="4.2" fill="${INK}" stroke="none"/><circle cx="72" cy="52" r="4.2" fill="${INK}" stroke="none"/>
+ <ellipse cx="60" cy="77" rx="17" ry="12" fill="#d8b48c"/>
+ <circle cx="53" cy="75" r="3.2" fill="${INK}" stroke="none"/><circle cx="67" cy="75" r="3.2" fill="${INK}" stroke="none"/>
+ <path d="M53 82 q7 5 14 0" fill="none" stroke-width="4"/>`);
+ART.ptica=svgWrap(`
+ <path d="M30 74 L11 67 L15 85 Z" fill="#3f93bd"/>
+ <circle cx="58" cy="62" r="30" fill="#5db3d9"/>
+ <path d="M56 32 q2 -10 10 -13 M64 34 q7 -8 14 -8" fill="none" stroke-width="4"/>
+ <ellipse cx="58" cy="75" rx="15" ry="11" fill="#e6f5fb" stroke="none"/>
+ <path d="M38 58 q-13 8 -5 21 q11 7 19 -7 q-3 -11 -14 -14z" fill="#3f93bd"/>
+ <circle cx="70" cy="52" r="4.4" fill="${INK}" stroke="none"/>
+ <path d="M86 57 L103 63 L86 69 Z" fill="#ffb03a"/>
+ <path d="M50 92 v9 M66 92 v9 M45 101 h11 M61 101 h11" fill="none" stroke-width="4"/>`);
+ART.riba=svgWrap(`
+ <path d="M82 62 L104 47 L99 62 L104 77 Z" fill="#ff8c5a"/>
+ <path d="M46 41 Q55 25 66 33 Q60 38 58 45 Z" fill="#ff8c5a"/>
+ <ellipse cx="54" cy="62" rx="31" ry="23" fill="#ff8c5a"/>
+ <path d="M63 42 q7 20 0 40 M76 47 q5 15 0 30" fill="none" stroke-width="4"/>
+ <circle cx="37" cy="56" r="4.4" fill="${INK}" stroke="none"/>
+ <path d="M28 67 q5 4 10 0" fill="none" stroke-width="4"/>
+ <circle cx="97" cy="30" r="5" fill="none" stroke-width="4"/>
+ <circle cx="107" cy="18" r="3.4" fill="none" stroke-width="3.4"/>`);
+ART.zaba=svgWrap(`
+ <ellipse cx="60" cy="70" rx="34" ry="28" fill="#67b357"/>
+ <ellipse cx="60" cy="82" rx="20" ry="12" fill="#dcedbc" stroke="none"/>
+ <circle cx="43" cy="38" r="12" fill="#67b357"/><circle cx="77" cy="38" r="12" fill="#67b357"/>
+ <circle cx="43" cy="37" r="6" fill="#fffdf6" stroke-width="4"/><circle cx="77" cy="37" r="6" fill="#fffdf6" stroke-width="4"/>
+ <circle cx="43" cy="38" r="2.8" fill="${INK}" stroke="none"/><circle cx="77" cy="38" r="2.8" fill="${INK}" stroke="none"/>
+ <circle cx="53" cy="60" r="2.6" fill="${INK}" stroke="none"/><circle cx="67" cy="60" r="2.6" fill="${INK}" stroke="none"/>
+ <path d="M42 72 q18 13 36 0" fill="none" stroke-width="4.5"/>
+ <circle cx="34" cy="68" r="5" fill="#f6a9b8" stroke="none"/><circle cx="86" cy="68" r="5" fill="#f6a9b8" stroke="none"/>`);
+ART.pcela=svgWrap(`
+ <ellipse cx="40" cy="40" rx="17" ry="10" fill="#e3f2fa" transform="rotate(-30 40 40)"/>
+ <ellipse cx="80" cy="40" rx="17" ry="10" fill="#e3f2fa" transform="rotate(30 80 40)"/>
+ <path d="M52 54 q-5 -10 -13 -12 M68 54 q5 -10 13 -12" fill="none" stroke-width="4"/>
+ <clipPath id="%ID%"><ellipse cx="60" cy="72" rx="27" ry="21"/></clipPath>
+ <ellipse cx="60" cy="72" rx="27" ry="21" fill="#ffc93c"/>
+ <rect x="35" y="48" width="10" height="48" fill="${INK}" stroke="none" clip-path="url(#%ID%)"/>
+ <rect x="75" y="48" width="10" height="48" fill="${INK}" stroke="none" clip-path="url(#%ID%)"/>
+ <circle cx="51" cy="67" r="4" fill="${INK}"/><circle cx="69" cy="67" r="4" fill="${INK}"/>
+ <path d="M53 76 q7 6 14 0" fill="none" stroke-width="4"/>`);
+ART.jabuka=svgWrap(`
+ <path d="M60 36 C44 20 20 34 23 58 C26 80 44 98 60 97 C76 98 94 80 97 58 C100 34 76 20 60 36z" fill="#e5484d"/>
+ <path d="M60 36 q1 -12 10 -17" fill="none" stroke-width="4.5"/>
+ <path d="M70 22 q15 -10 21 0 q-11 9 -21 0z" fill="#67b357"/>
+ <path d="M36 50 q-3 10 3 17" fill="none" stroke="#ffffff" stroke-opacity=".55" stroke-width="5"/>
+ ${face(48,72,58,68)}`);
+ART.kruska=svgWrap(`
+ <path d="M60 28 C58 42 47 47 42 60 C37 78 47 96 60 96 C73 96 83 78 78 60 C73 47 62 42 60 28z" fill="#b7cf5c"/>
+ <path d="M60 28 q0 -10 8 -14" fill="none" stroke-width="4.5"/>
+ <path d="M68 18 q15 -10 21 0 q-11 9 -21 0z" fill="#67b357"/>
+ <circle cx="49" cy="74" r="2.4" fill="#87a13c" stroke="none"/><circle cx="64" cy="84" r="2.4" fill="#87a13c" stroke="none"/><circle cx="71" cy="72" r="2.4" fill="#87a13c" stroke="none"/>
+ ${face(50,70,60,70)}`);
+ART.banana=svgWrap(`
+ <path d="M28 42 C31 70 54 88 84 84 C95 82 97 74 88 72 C62 67 46 56 41 38 C38 27 26 30 28 42z" fill="#ffd23e"/>
+ <path d="M35 44 C40 62 54 74 74 78" fill="none" stroke="#e0a92c" stroke-width="4"/>
+ <circle cx="29" cy="38" r="4" fill="#8a5a2b"/>
+ <circle cx="52" cy="63" r="3.6" fill="${INK}" stroke="none"/><circle cx="66" cy="67" r="3.6" fill="${INK}" stroke="none"/>
+ <path d="M56 72 q5 5 10 1" fill="none" stroke-width="3.6"/>`);
+ART.tresnja=svgWrap(`
+ <path d="M44 64 Q52 30 66 22 M76 68 Q72 36 66 22" fill="none" stroke-width="4.5"/>
+ <path d="M66 22 q16 -9 22 1 q-13 8 -22 -1z" fill="#67b357"/>
+ <circle cx="42" cy="79" r="15" fill="#e5484d"/><circle cx="78" cy="83" r="15" fill="#e5484d"/>
+ <path d="M33 73 q-2 5 2 9" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="4"/>
+ <circle cx="36" cy="76" r="3.4" fill="${INK}" stroke="none"/><circle cx="48" cy="76" r="3.4" fill="${INK}" stroke="none"/>
+ <path d="M39 82 q3 3.5 6 0" fill="none" stroke-width="3.4"/>
+ <circle cx="72" cy="80" r="3.4" fill="${INK}" stroke="none"/><circle cx="84" cy="80" r="3.4" fill="${INK}" stroke="none"/>
+ <path d="M75 86 q3 3.5 6 0" fill="none" stroke-width="3.4"/>`);
+ART.jagoda=svgWrap(`
+ <path d="M60 33 C79 33 92 44 90 60 C88 79 72 95 60 97 C48 95 32 79 30 60 C28 44 41 33 60 33z" fill="#e5484d"/>
+ <path d="M60 33 q1 -9 7 -12" fill="none" stroke-width="4.5"/>
+ <path d="M43 35 q9 -10 17 -3 q8 -7 17 3 q-9 7 -17 5 q-8 2 -17 -5z" fill="#67b357"/>
+ <ellipse cx="41" cy="52" rx="2.6" ry="4" fill="#ffe9b0" stroke="none"/><ellipse cx="79" cy="52" rx="2.6" ry="4" fill="#ffe9b0" stroke="none"/>
+ <ellipse cx="36" cy="70" rx="2.6" ry="4" fill="#ffe9b0" stroke="none"/><ellipse cx="84" cy="70" rx="2.6" ry="4" fill="#ffe9b0" stroke="none"/>
+ <ellipse cx="60" cy="88" rx="2.6" ry="4" fill="#ffe9b0" stroke="none"/><ellipse cx="47" cy="84" rx="2.6" ry="4" fill="#ffe9b0" stroke="none"/><ellipse cx="73" cy="84" rx="2.6" ry="4" fill="#ffe9b0" stroke="none"/>
+ ${face(50,70,60,70)}`);
+ART.limun=svgWrap(`
+ <path d="M25 64 L11 56 L14.5 64 L11 72 Z" fill="#ffd94a"/><path d="M95 64 L109 56 L105.5 64 L109 72 Z" fill="#ffd94a"/>
+ <ellipse cx="60" cy="64" rx="34" ry="24" fill="#ffd94a"/>
+ <path d="M35 55 q-3 8 2 14" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="5"/>
+ ${face(49,71,59,69)}`);
+ART.grozdje=svgWrap(`
+ <path d="M60 32 q2 -11 9 -15" fill="none" stroke-width="4.5"/>
+ <path d="M64 20 q14 -10 22 -2 q-12 10 -22 2z" fill="#67b357"/>
+ <circle cx="45" cy="47" r="13" fill="#9b5dbb"/><circle cx="75" cy="47" r="13" fill="#9b5dbb"/>
+ <circle cx="32" cy="65" r="12" fill="#9b5dbb"/><circle cx="88" cy="65" r="12" fill="#9b5dbb"/>
+ <circle cx="60" cy="63" r="13" fill="#a76bc7"/>
+ <circle cx="46" cy="82" r="12" fill="#9b5dbb"/><circle cx="74" cy="82" r="12" fill="#9b5dbb"/>
+ <circle cx="60" cy="97" r="11" fill="#9b5dbb"/>
+ <circle cx="55" cy="59" r="3.6" fill="${INK}" stroke="none"/><circle cx="65" cy="59" r="3.6" fill="${INK}" stroke="none"/>
+ <path d="M56 66 q4 4 8 0" fill="none" stroke-width="3.4"/>`);
+ART.mrkva=svgWrap(`
+ <path d="M60 30 C55 18 45 14 39 17 C43 26 51 31 60 30z" fill="#67b357"/>
+ <path d="M60 30 C65 18 75 14 81 17 C77 26 69 31 60 30z" fill="#67b357"/>
+ <path d="M60 30 C57 20 59 10 66 6 C69 16 66 25 60 30z" fill="#67b357"/>
+ <path d="M60 30 C74 30 82 40 79 54 C75 72 66 90 60 98 C54 90 45 72 41 54 C38 40 46 30 60 30z" fill="#ff8c3a"/>
+ <path d="M49 58 h20 M52 70 h14 M55 82 h9" fill="none" stroke="#e07020" stroke-width="4"/>
+ <circle cx="53" cy="45" r="4" fill="${INK}" stroke="none"/><circle cx="67" cy="45" r="4" fill="${INK}" stroke="none"/>
+ <path d="M55 52 q5 5 10 0" fill="none" stroke-width="4"/>`);
+/* --- new art for the alphabet --- */
+ART.avion=svgWrap(`
+ <path d="M84 44 L100 24 L108 30 L94 50 Z" fill="#3f93bd"/>
+ <ellipse cx="60" cy="64" rx="40" ry="17" fill="#5db3d9"/>
+ <path d="M50 52 L64 30 L80 30 L66 52 Z" fill="#e6f5fb"/>
+ <path d="M52 78 L44 98 L70 98 L70 78 Z" fill="#3f93bd"/>
+ <circle cx="38" cy="62" r="6" fill="#e6f5fb" stroke-width="3.5"/><circle cx="54" cy="62" r="6" fill="#e6f5fb" stroke-width="3.5"/>
+ <circle cx="26" cy="68" r="4" fill="${INK}" stroke="none"/>
+ <path d="M30 74 q6 4 12 0" fill="none" stroke-width="3.5"/>`);
+ART.cvijet=svgWrap(`
+ <path d="M60 64 V106" fill="none" stroke-width="5"/>
+ <path d="M60 88 q-16 -4 -20 -18 q18 -2 20 18" fill="#67b357"/>
+ <circle cx="60" cy="26" r="13" fill="#f272a8"/><circle cx="37" cy="43" r="13" fill="#f272a8"/><circle cx="83" cy="43" r="13" fill="#f272a8"/>
+ <circle cx="44" cy="65" r="13" fill="#f272a8"/><circle cx="76" cy="65" r="13" fill="#f272a8"/>
+ <circle cx="60" cy="50" r="15" fill="#ffc93c"/>
+ ${face(53,67,48,57)}`);
+ART.carapa=svgWrap(`
+ <path d="M40 16 H72 V56 Q72 62 78 68 Q94 82 90 94 Q85 104 72 102 Q56 99 48 84 L40 64 Z" fill="#f272a8"/>
+ <path d="M40 16 H72 V28 H40 Z" fill="#fffdf6"/>
+ <path d="M40 44 H72 V56 H40 Z" fill="#fffdf6"/>
+ <circle cx="52" cy="37" r="3.6" fill="${INK}" stroke="none"/><circle cx="64" cy="37" r="3.6" fill="${INK}" stroke="none"/>
+ <path d="M53 42 q5 4 10 0" fill="none" stroke-width="3.4"/>
+ <path d="M78 86 q9 7 5 13" fill="none" stroke-width="4"/>`);
+ART.cup=svgWrap(`
+ <path d="M44 22 h32 v10 q0 6 6 10 q12 9 12 24 q0 26 -34 26 q-34 0 -34 -26 q0 -15 12 -24 q6 -4 6 -10 z" fill="#cf9a63"/>
+ <rect x="40" y="16" width="40" height="10" rx="4" fill="#b47b4b"/>
+ <path d="M94 56 q17 7 12 21 q-4 12 -19 11" fill="none" stroke-width="5"/>
+ <circle cx="52" cy="62" r="3.8" fill="${INK}" stroke="none"/><circle cx="68" cy="62" r="3.8" fill="${INK}" stroke="none"/>
+ <path d="M53 70 q7 6 14 0" fill="none" stroke-width="4"/>`);
+ART.drvo=svgWrap(`
+ <path d="M52 70 h16 v34 h-16 z" fill="#a9683f"/>
+ <circle cx="60" cy="44" r="26" fill="#67b357"/>
+ <circle cx="36" cy="56" r="18" fill="#67b357"/><circle cx="84" cy="56" r="18" fill="#67b357"/>
+ <circle cx="44" cy="58" r="3.4" fill="#e5484d" stroke="none"/><circle cx="72" cy="62" r="3.4" fill="#e5484d" stroke="none"/><circle cx="58" cy="68" r="3.4" fill="#e5484d" stroke="none"/>
+ ${face(52,68,40,50)}`);
+ART.dzem=svgWrap(`
+ <rect x="38" y="14" width="44" height="16" rx="5" fill="#b47b4b"/>
+ <path d="M40 30 h40 v54 q0 12 -20 12 q-20 0 -20 -12 z" fill="#e5484d"/>
+ <rect x="34" y="42" width="52" height="30" rx="8" fill="#fffdf6"/>
+ <circle cx="60" cy="57" r="8" fill="#e5484d" stroke-width="3.5"/>
+ <path d="M60 50 q6 -6 10 -1 q3 5 -5 9" fill="#67b357" stroke-width="3.5"/>`);
+ART.djak=svgWrap(`
+ <circle cx="60" cy="66" r="28" fill="#f6c99f"/>
+ <path d="M28 42 L60 28 L92 42 L60 54 Z" fill="#3f93bd"/>
+ <path d="M84 46 v14" fill="none" stroke-width="4"/>
+ <circle cx="84" cy="64" r="4.5" fill="#ffc93c" stroke-width="3"/>
+ <circle cx="50" cy="70" r="4" fill="${INK}" stroke="none"/><circle cx="70" cy="70" r="4" fill="${INK}" stroke="none"/>
+ <path d="M53 80 q7 6 14 0" fill="none" stroke-width="4"/>
+ <circle cx="44" cy="78" r="4" fill="#f2a3a3" stroke="none"/><circle cx="76" cy="78" r="4" fill="#f2a3a3" stroke="none"/>`);
+ART.ekser=svgWrap(`
+ <rect x="34" y="24" width="52" height="12" rx="6" fill="#9aa3ad"/>
+ <path d="M50 36 h20 l-4 58 q-1 8 -6 8 q-5 0 -6 -8 z" fill="#b8c0c9"/>
+ <path d="M55 48 l2 38" fill="none" stroke="#fffdf6" stroke-opacity=".7" stroke-width="3.5"/>
+ <path d="M92 26 l7 -7 M94 38 h9" fill="none" stroke-width="3.5"/>`);
+ART.frula=svgWrap(`
+ <g transform="rotate(-35 60 60)">
+  <rect x="14" y="50" width="92" height="20" rx="10" fill="#e2a96b"/>
+  <rect x="16" y="52" width="14" height="16" rx="6" fill="#b47b4b"/>
+  <circle cx="46" cy="60" r="3.6" fill="${INK}" stroke="none"/><circle cx="60" cy="60" r="3.6" fill="${INK}" stroke="none"/>
+  <circle cx="74" cy="60" r="3.6" fill="${INK}" stroke="none"/><circle cx="88" cy="60" r="3.6" fill="${INK}" stroke="none"/>
+ </g>
+ <path d="M98 16 q9 6 3 15" fill="none" stroke-width="3.5"/>`);
+ART.gljiva=svgWrap(`
+ <path d="M60 18 q-40 0 -44 30 q-1 8 8 8 h72 q9 0 8 -8 q-4 -30 -44 -30z" fill="#e5484d"/>
+ <circle cx="42" cy="38" r="6" fill="#fffdf6" stroke="none"/><circle cx="66" cy="30" r="5" fill="#fffdf6" stroke="none"/><circle cx="80" cy="42" r="5.5" fill="#fffdf6" stroke="none"/>
+ <path d="M46 56 h28 l4 34 q0 12 -18 12 q-18 0 -18 -12 z" fill="#f8ecd3"/>
+ ${face(53,67,74,84)}`);
+ART.hljeb=svgWrap(`
+ <path d="M18 74 q0 -34 42 -34 q42 0 42 34 q0 12 -12 12 h-60 q-12 0 -12 -12z" fill="#e2a96b"/>
+ <path d="M38 52 q4 8 0 16 M56 48 q4 8 0 16 M74 52 q4 8 0 16" fill="none" stroke="#b47b4b" stroke-width="4.5"/>
+ ${face(50,70,68,80)}`);
+ART.igla=svgWrap(`
+ <g transform="rotate(45 60 60)">
+  <path d="M60 14 q9 0 9 9 v66 q0 9 -9 9 q-9 0 -9 -9 v-66 q0 -9 9 -9z" fill="#b8c0c9"/>
+  <ellipse cx="60" cy="28" rx="4.5" ry="6" fill="#fdf6e7" stroke-width="3.5"/>
+ </g>
+ <path d="M82 86 q16 2 13 13 q-3 10 -14 6 q-9 -4 -3 -13" fill="none" stroke="#e5484d" stroke-width="4"/>`);
+ART.ljiljan=svgWrap(`
+ <path d="M60 62 V106 M60 86 q-14 -2 -18 -14 M60 94 q14 -2 18 -14" fill="none" stroke-width="4.5"/>
+ <path d="M42 72 q-16 -2 -19 -15 q15 -3 20 9z" fill="#67b357" stroke-width="4"/>
+ <path d="M60 22 q6 -10 14 -6 q10 5 6 18 q-3 12 -20 20 q-17 -8 -20 -20 q-4 -13 6 -18 q8 -4 14 6z" fill="#f78fb3"/>
+ <path d="M54 32 l6 12 l6 -12" fill="none" stroke-width="3.5"/>
+ ${face(54,66,38,46)}`);
+ART.narandza=svgWrap(`
+ <path d="M58 30 q0 -10 8 -13" fill="none" stroke-width="4.5"/>
+ <path d="M66 20 q14 -10 21 0 q-12 9 -21 0z" fill="#67b357"/>
+ <circle cx="60" cy="64" r="34" fill="#ff9b42"/>
+ <circle cx="42" cy="56" r="1.8" fill="#e07020" stroke="none"/><circle cx="74" cy="48" r="1.8" fill="#e07020" stroke="none"/>
+ <circle cx="82" cy="70" r="1.8" fill="#e07020" stroke="none"/><circle cx="40" cy="78" r="1.8" fill="#e07020" stroke="none"/>
+ ${face(48,72,60,70)}`);
+ART.njiva=svgWrap(`
+ <circle cx="94" cy="24" r="12" fill="#ffc93c"/>
+ <path d="M6 96 q54 -26 108 0 z" fill="#b7cf5c"/>
+ <path d="M24 88 q36 -12 72 0 M32 78 q28 -9 56 0 M40 70 q20 -6 40 0" fill="none" stroke="#87a13c" stroke-width="4"/>
+ <path d="M46 64 q0 -8 6 -10 M60 60 q0 -8 6 -10 M74 64 q0 -8 6 -10" fill="none" stroke="#55a849" stroke-width="4"/>`);
+ART.oko=svgWrap(`
+ <path d="M14 62 q46 -46 92 0 q-46 46 -92 0z" fill="#fffdf6"/>
+ <circle cx="60" cy="62" r="17" fill="#5db3d9"/>
+ <circle cx="60" cy="62" r="7" fill="${INK}" stroke="none"/>
+ <circle cx="65" cy="56" r="3.4" fill="#fffdf6" stroke="none"/>
+ <path d="M26 34 q10 -8 20 -6 M74 28 q10 -2 18 6" fill="none" stroke-width="4"/>
+ <path d="M30 84 l-6 8 M48 90 l-3 9 M72 90 l3 9 M90 84 l6 8" fill="none" stroke-width="4"/>`);
+ART.slon=svgWrap(`
+ <circle cx="23" cy="58" r="17" fill="#8fa3c8"/><circle cx="97" cy="58" r="17" fill="#8fa3c8"/>
+ <circle cx="60" cy="56" r="30" fill="#a9b8d8"/>
+ <path d="M60 70 q-3 16 4 22" fill="none" stroke-width="11"/>
+ <path d="M60 70 q-3 16 4 22" fill="none" stroke="#a9b8d8" stroke-width="5"/>
+ <circle cx="47" cy="50" r="4.2" fill="${INK}" stroke="none"/><circle cx="73" cy="50" r="4.2" fill="${INK}" stroke="none"/>
+ <circle cx="39" cy="64" r="4.5" fill="#f2a3a3" stroke="none"/><circle cx="81" cy="64" r="4.5" fill="#f2a3a3" stroke="none"/>`);
+ART.solja=svgWrap(`
+ <path d="M34 46 h48 v22 q0 20 -24 20 q-24 0 -24 -20 z" fill="#e6f5fb"/>
+ <path d="M82 52 q16 0 16 12 q0 12 -16 12" fill="none" stroke-width="5"/>
+ <path d="M42 34 q-4 -8 2 -14 M58 34 q-4 -8 2 -14 M74 34 q-4 -8 2 -14" fill="none" stroke-width="4"/>
+ ${face(46,70,58,66)}`);
+ART.torta=svgWrap(`
+ <rect x="55" y="22" width="10" height="28" rx="3" fill="#5db3d9"/>
+ <path d="M60 6 q7 9 0 16 q-7 -7 0 -16z" fill="#ffc93c" stroke-width="3.5"/>
+ <path d="M28 56 h64 v30 q0 8 -8 8 h-48 q-8 0 -8 -8 z" fill="#f9c8d4"/>
+ <path d="M28 56 q8 12 16 0 q8 12 16 0 q8 12 16 0 q8 12 16 0" fill="none" stroke-width="4"/>
+ <circle cx="44" cy="80" r="3.4" fill="#e5484d" stroke="none"/><circle cx="60" cy="84" r="3.4" fill="#4fb0d6" stroke="none"/><circle cx="76" cy="80" r="3.4" fill="#67b357" stroke="none"/>
+ <path d="M20 100 q40 10 80 0" fill="none" stroke-width="4.5"/>`);
+ART.uho=svgWrap(`
+ <path d="M42 20 q34 -8 44 24 q8 26 -8 44 q-14 16 -30 8 q-14 -8 -12 -26 q2 -14 12 -18" fill="#f6c99f"/>
+ <path d="M52 42 q16 -6 22 10 q5 16 -8 24" fill="none" stroke-width="4.5"/>
+ <path d="M22 44 q-9 -2 -12 -10 M20 60 q-11 0 -15 -7" fill="none" stroke-width="4"/>`);
+ART.voda=svgWrap(`
+ <path d="M60 14 q26 34 26 54 a26 26 0 0 1 -52 0 q0 -20 26 -54z" fill="#5db3d9"/>
+ <path d="M46 74 q0 10 8 14" fill="none" stroke="#fffdf6" stroke-opacity=".7" stroke-width="5"/>
+ ${face(50,70,66,76)}`);
+ART.zvijezda=svgWrap(`
+ <path d="M60 12 L73 44 L108 47 L81 69 L90 103 L60 84 L30 103 L39 69 L12 47 L47 44 Z" fill="#ffc93c"/>
+ ${face(48,72,56,64)}`);
+
+/* parrot mascot — its beak flaps while the app speaks */
+const PARROT=`<svg class="parrot" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+ <g stroke="${INK}" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M52 30 q0 -12 10 -15 M62 32 q6 -9 14 -9" fill="none"/>
+  <circle cx="56" cy="58" r="29" fill="#5eb85c"/>
+  <circle cx="65" cy="52" r="9" fill="#fffdf6"/><circle cx="67" cy="53" r="3.6" fill="${INK}" stroke="none"/>
+  <circle cx="44" cy="66" r="6" fill="#f6a9b8" stroke="none"/>
+  <path class="beak-up" d="M76 50 C92 52 97 64 90 73 C85 79 76 78 73 71 L73 58 Z" fill="#f5a623"/>
+  <path class="beak-lo" d="M75 74 C79 81 88 82 92 76 C90 85 79 88 72 81 Z" fill="#d9860a"/>
+ </g></svg>`;
+
+/* icons */
+const ICONS={
+  back:`<svg viewBox="0 0 24 24" fill="none" stroke="${INK}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 5.5 8 12l6.5 6.5"/></svg>`,
+  close:`<svg viewBox="0 0 24 24" fill="none" stroke="${INK}" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>`,
+  replay:`<svg viewBox="0 0 24 24" fill="none" stroke="${INK}" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 12a8.5 8.5 0 1 1-2.7-6.2"/><path d="M20.5 2.5V7.2H15.8"/></svg>`,
+  speaker:`<svg viewBox="0 0 24 24"><path d="M4 9.5v5h3.5L13 19V5L7.5 9.5H4z" fill="${INK}"/><path d="M16 8.5a5.5 5.5 0 0 1 0 7M18.6 6a9.2 9.2 0 0 1 0 12" fill="none" stroke="${INK}" stroke-width="2.4" stroke-linecap="round"/></svg>`,
+  speakerOff:`<svg viewBox="0 0 24 24"><path d="M4 9.5v5h3.5L13 19V5L7.5 9.5H4z" fill="${INK}"/><path d="M16.5 9l6 6M22.5 9l-6 6" fill="none" stroke="${INK}" stroke-width="2.4" stroke-linecap="round"/></svg>`,
+  sliders:`<svg viewBox="0 0 24 24" fill="none" stroke="${INK}" stroke-width="2.6" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/><circle cx="9.5" cy="7" r="2.6" fill="#fffdf6"/><circle cx="15" cy="12" r="2.6" fill="#fffdf6"/><circle cx="8" cy="17" r="2.6" fill="#fffdf6"/></svg>`
+};
+const star=(fill,s=20)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24"><path d="M12 2.5l2.8 5.9 6.4.8-4.7 4.4 1.2 6.3L12 16.8l-5.7 3.1 1.2-6.3L2.8 9.2l6.4-.8z" fill="${fill?'#ffc93c':'none'}" stroke="${INK}" stroke-width="1.8" stroke-linejoin="round"/></svg>`;
+
+/* ================= vocabulary data ================= */
+const NUMWORDS=['jedan','dva','tri','četiri','pet','šest','sedam','osam','devet','deset'];
+const DIGITCOL=['#e5484d','#ff8c3a','#d99e00','#55a849','#3572d6','#9b5dbb','#f272a8','#3f93bd','#59b85e','#3a2d23'];
+const COLORS=[['crvena','#e5484d'],['plava','#3572d6'],['zelena','#55a849'],['žuta','#f2b70a'],
+              ['narandžasta','#ff8c3a'],['ljubičasta','#9b5dbb'],['roza','#f272a8'],['crna','#3f3d4d']];
+
+function numArt(n){
+  return `<div class="numart" style="text-align:center"><span style="font-size:3.1rem;font-weight:800;line-height:1;color:${DIGITCOL[n-1]}">${n}</span>
+  <div style="display:flex;flex-wrap:wrap;gap:5px;justify-content:center;max-width:96px;margin:6px auto 0">
+  ${'<i style="width:11px;height:11px;border-radius:50%;background:#3a2d23;opacity:.75;display:inline-block"></i>'.repeat(n)}</div></div>`;
+}
+const renderArt=it=>it.num?numArt(it.num):`<div class="art">${A(it.art)}</div>`;
+
+const CATS=[
+  {id:'ziv',name:'Životinje',bg:'#ff6b57',fg:'#fffdf6',items:[
+    {word:'pas',art:ART.pas},{word:'mačka',art:ART.macka},{word:'krava',art:ART.krava},{word:'konj',art:ART.konj},
+    {word:'ptica',art:ART.ptica},{word:'riba',art:ART.riba},{word:'žaba',art:ART.zaba},{word:'pčela',art:ART.pcela}]},
+  {id:'voce',name:'Voće i povrće',bg:'#59b85e',fg:'#fffdf6',items:[
+    {word:'jabuka',art:ART.jabuka},{word:'kruška',art:ART.kruska},{word:'banana',art:ART.banana},{word:'trešnja',art:ART.tresnja},
+    {word:'jagoda',art:ART.jagoda},{word:'limun',art:ART.limun},{word:'grožđe',art:ART.grozdje},{word:'mrkva',art:ART.mrkva}]},
+  {id:'boje',name:'Boje',bg:'#f2b70a',fg:'#3a2d23',items:COLORS.map(([w,c])=>({word:w,art:blob(c)}))},
+  {id:'br',name:'Brojevi',bg:'#4fb0d6',fg:'#fffdf6',items:NUMWORDS.map((w,i)=>({word:w,num:i+1}))}
+];
+const ALLITEMS=CATS.flatMap(c=>c.items);
+const catItems=()=>CATS.find(c=>c.id===G.cat).items;
+
+/* --- the 30-letter Bosnian alphabet: letter, spoken name, example word, art --- */
+const ABC=[
+  {l:'A', n:'a',  w:'avion',    art:ART.avion},
+  {l:'B', n:'be', w:'banana',   art:ART.banana},
+  {l:'C', n:'ce', w:'cvijet',   art:ART.cvijet},
+  {l:'Č', n:'če', w:'čarapa',   art:ART.carapa},
+  {l:'Ć', n:'će', w:'ćup',      art:ART.cup},
+  {l:'D', n:'de', w:'drvo',     art:ART.drvo},
+  {l:'Dž',n:'dže',w:'džem',     art:ART.dzem},
+  {l:'Đ', n:'dje',w:'đak',      art:ART.djak},
+  {l:'E', n:'e',  w:'ekser',    art:ART.ekser},
+  {l:'F', n:'ef', w:'frula',    art:ART.frula},
+  {l:'G', n:'ge', w:'gljiva',   art:ART.gljiva},
+  {l:'H', n:'ha', w:'hljeb',    art:ART.hljeb},
+  {l:'I', n:'i',  w:'igla',     art:ART.igla},
+  {l:'J', n:'jot',w:'jabuka',   art:ART.jabuka},
+  {l:'K', n:'ka', w:'krava',    art:ART.krava},
+  {l:'L', n:'el', w:'limun',    art:ART.limun},
+  {l:'Lj',n:'lje',w:'ljiljan',  art:ART.ljiljan},
+  {l:'M', n:'em', w:'mačka',    art:ART.macka},
+  {l:'N', n:'en', w:'narandža', art:ART.narandza},
+  {l:'Nj',n:'nje',w:'njiva',    art:ART.njiva},
+  {l:'O', n:'o',  w:'oko',      art:ART.oko},
+  {l:'P', n:'pe', w:'pas',      art:ART.pas},
+  {l:'R', n:'er', w:'riba',     art:ART.riba},
+  {l:'S', n:'es', w:'slon',     art:ART.slon},
+  {l:'Š', n:'eš', w:'šolja',    art:ART.solja},
+  {l:'T', n:'te', w:'torta',    art:ART.torta},
+  {l:'U', n:'u',  w:'uho',      art:ART.uho},
+  {l:'V', n:'ve', w:'voda',     art:ART.voda},
+  {l:'Z', n:'ze', w:'zvijezda', art:ART.zvijezda},
+  {l:'Ž', n:'že', w:'žaba',     art:ART.zaba}
+];
+
+/* --- simple sentences: text, english, art --- */
+const SENTLIST=[
+  {s:'Ovo je pas.',      en:'This is a dog.',        art:ART.pas},
+  {s:'Ovo je mačka.',    en:'This is a cat.',        art:ART.macka},
+  {s:'Ptica pjeva.',     en:'The bird sings.',       art:ART.ptica},
+  {s:'Riba pliva.',      en:'The fish swims.',       art:ART.riba},
+  {s:'Žaba skače.',      en:'The frog jumps.',       art:ART.zaba},
+  {s:'Konj trči.',       en:'The horse runs.',       art:ART.konj},
+  {s:'Volim jabuke.',    en:'I love apples.',        art:ART.jabuka},
+  {s:'Jagoda je crvena.',en:'The strawberry is red.',art:ART.jagoda},
+  {s:'Dobar dan!',       en:'Hello! / Good day!',    art:PARROT},
+  {s:'Hvala lijepo!',    en:'Thank you very much!',  art:PARROT},
+  {s:'Doviđenja!',       en:'Goodbye!',              art:PARROT}
+];
+const cleanWords=s=>s.replace(/[.!?]/g,'').split(' ').filter(Boolean);
+
+/* ================= confetti & particles ================= */
+const PALETTE=['#ff6b57','#ffc93c','#59b85e','#4fb0d6','#f78fb3','#9b5dbb'];
+function makePiece(){
+  const p=document.createElement('div');p.className='cf';
+  const k=Math.random();
+  p.classList.add(k<.4?'c-dot':k<.72?'c-star':'c-petal');
+  const s=7+Math.random()*8;
+  p.style.width=s+'px';p.style.height=s+'px';
+  p.style.background=pick(PALETTE);
+  return p;
+}
+function burst(x,y,n=12){
+  for(let i=0;i<n;i++){
+    const p=makePiece();p.style.left=x+'px';p.style.top=y+'px';
+    document.body.appendChild(p);
+    const a=(i/n)*Math.PI*2+Math.random()*.6,d=44+Math.random()*54;
+    p.animate([
+      {transform:'translate(-50%,-50%) scale(1) rotate(0)',opacity:1},
+      {transform:`translate(calc(-50% + ${Math.cos(a)*d}px),calc(-50% + ${Math.sin(a)*d+26}px)) scale(.35) rotate(${Math.random()*260-130}deg)`,opacity:0}
+    ],{duration:620+Math.random()*260,easing:'cubic-bezier(.2,.6,.4,1)',fill:'forwards'}).onfinish=()=>p.remove();
+  }
+}
+function burstFrom(el,n=12){if(!el)return;const r=el.getBoundingClientRect();burst(r.left+r.width/2,r.top+r.height/2,n)}
+function confettiRain(){
+  for(let i=0;i<80;i++){
+    const p=makePiece();
+    p.style.left=Math.random()*100+'vw';p.style.top='-24px';
+    document.body.appendChild(p);
+    const dur=1700+Math.random()*1500,drift=Math.random()*140-70;
+    p.animate([
+      {transform:'translate(0,0) rotate(0)',opacity:1},
+      {transform:`translate(${drift*.6}px,${innerHeight*.55}px) rotate(${Math.random()*400-200}deg)`,opacity:1,offset:.75},
+      {transform:`translate(${drift}px,${innerHeight+50}px) rotate(${Math.random()*700-350}deg)`,opacity:0}
+    ],{duration:dur,delay:Math.random()*500,easing:'cubic-bezier(.25,.4,.6,1)',fill:'both'}).onfinish=()=>p.remove();
+  }
+}
+let toastT;
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>e.classList.remove('show'),2100)}
+
+/* ================= word bubble ================= */
+function letters(w,colorize){
+  return [...w].map((c,i)=>`<span class="lt" style="animation-delay:${i*55}ms;${colorize?`color:${PALL[i%PALL.length]}`:''}">${c===' '?'&nbsp;':c}</span>`).join('');
+}
+function showWord(word,say){
+  $('#bword').innerHTML=letters(word);
+  $('#bubble').dataset.say=say||word;
+  $('#bubble').classList.remove('hidden');
+  speak(say||word);
+}
+function hideBubble(){$('#bubble').classList.add('hidden')}
+
+/* ================= app state & router ================= */
+let STARS=JSON.parse(localStorage.getItem('rijStars')||'{}');
+let G={timers:[],cat:localStorage.getItem('rijCat')||'ziv',mode:'home'};
+let CUR='home';
+function clearTimers(){G.timers.forEach(clearTimeout);G.timers=[]}
+function later(f,ms){G.timers.push(setTimeout(f,ms))}
+function saveStars(){STARS[G.mode]=(STARS[G.mode]||0)+G.total;localStorage.setItem('rijStars',JSON.stringify(STARS))}
+function go(mode){
+  clearTimers();hideBubble();cancelSpeech();
+  const ov=$('#overlay');ov.classList.add('hidden');ov.innerHTML='';
+  CUR=mode;G={timers:[],cat:G.cat||'ziv',mode};
+  localStorage.setItem('rijCat',G.cat);
+  if(mode==='home')home();else BUILD[mode]();
+  window.scrollTo(0,0);
+}
+
+/* ================= shared UI bits ================= */
+const topbar=t=>`<header class="topbar"><button class="icon-btn" id="backBtn" aria-label="Nazad">${ICONS.back}</button><h2 class="gtitle">${t}</h2><span></span></header>`;
+function bindTop(){$('#backBtn').onclick=()=>{sfx.flip();go('home')}}
+const starRow=(f,t)=>Array.from({length:t},(_,i)=>star(i<f,18)).join('');
+function updProg(){const p=$('#prog');if(p&&G.total)p.innerHTML=starRow(G.score,G.total)}
+function catbar(){return `<div class="catbar">${CATS.map(c=>`<button class="pill ${c.id===G.cat?'on':''}" data-cat="${c.id}" style="--pbg:${c.bg};--pfg:${c.fg}">${c.name}</button>`).join('')}</div>`}
+function bindCatbar(rerender){
+  document.querySelectorAll('.pill').forEach(p=>p.addEventListener('click',()=>{
+    if(G.cat===p.dataset.cat)return;
+    G.cat=p.dataset.cat;sfx.flip();
+    document.querySelectorAll('.pill').forEach(x=>x.classList.toggle('on',x===p));
+    rerender();
+  }));
+}
+function bumpEl(el){el.classList.remove('bump');void el.offsetWidth;el.classList.add('bump')}
+
+/* ================= home screen ================= */
+const MODES=[
+  {id:'istrazuj',title:'Dodirni i čuj',en:'Tap & hear',color:'#ff6b57',tilt:-1.3,hero:true},
+  {id:'abc',title:'Abeceda',en:'Alphabet',color:'#9b5dbb',tilt:1.7},
+  {id:'rec',title:'Rečenice',en:'Sentences',color:'#3572d6',tilt:-1.1},
+  {id:'sta',title:'Šta je ovo?',en:'Pick the word',color:'#59b85e',tilt:1.6},
+  {id:'slu',title:'Slušaj i nađi',en:'Listen & find',color:'#4fb0d6',tilt:-1.8},
+  {id:'par',title:'Parovi',en:'Memory pairs',color:'#f78fb3',tilt:1.3},
+  {id:'br',title:'Brojimo',en:'Let\'s count',color:'#ff9b42',tilt:-1.5}
+];
+const mini=w=>{const it=ALLITEMS.find(i=>i.word===w);return `<span class="mini">${renderArt(it)}</span>`};
+const miniRaw=a=>`<span class="mini">${a}</span>`;
+function tilePrev(m){
+  switch(m.id){
+    case 'istrazuj':return mini('pas')+mini('jabuka')+mini('ptica');
+    case 'abc':return `<span class="mini q">A</span>`+miniRaw(ART.zvijezda)+`<span class="mini q">Ž</span>`;
+    case 'rec':return `<span class="mini spk">${ICONS.speaker}</span>`+miniRaw(ART.pas)+miniRaw(ART.jabuka);
+    case 'sta':return mini('krava')+`<span class="mini q">?</span>`;
+    case 'slu':return `<span class="mini spk">${ICONS.speaker}</span>`+mini('ptica');
+    case 'par':return `<span class="mini backm">${star(false,30)}</span><span class="mini backm">${star(false,30)}</span>`;
+    case 'br':return mini('jabuka')+mini('jagoda')+`<span class="mini q">3</span>`;
+  }
+}
+function tileFoot(m){
+  if(m.id==='abc')return '30 slova · letters';
+  if(m.id==='rec')return '11 rečenica · phrases';
+  return `${star((STARS[m.id]||0)>0,17)}<b>${STARS[m.id]||0}</b>`;
+}
+function home(){
+  hideBubble();
+  $('#app').innerHTML=`
+  <section class="hero">
+    <div class="logorow"><h1 class="logo">${letters('Riječica',true)}</h1><div class="hero-parrot">${PARROT}</div></div>
+    <svg class="squig" width="230" height="18" viewBox="0 0 260 20"><path d="M6 12 q20 -14 41 0 t41 0 t41 0 t41 0 t41 0" fill="none" stroke="#ff6b57" stroke-width="6" stroke-linecap="round"/></svg>
+    <p class="sub">Bosanski za djecu <span class="en">· Bosnian for kids</span></p>
+    <p class="hint">Izaberi igru! <span class="en">· Pick a game!</span></p>
+  </section>
+  <section class="tiles">${MODES.map(m=>`
+    <button class="tile ${m.hero?'hero':''}" data-mode="${m.id}" style="--acc:${m.color};--tilt:${m.tilt}deg">
+      <span class="tcol">
+        <span class="tname">${m.title}</span><span class="ten">${m.en}</span>
+        <span class="tstars">${tileFoot(m)}</span>
+      </span>
+      <span class="tprev">${tilePrev(m)}</span>
+    </button>`).join('')}</section>`;
+  document.querySelectorAll('.tile').forEach(t=>{
+    t.onclick=()=>{sfx.pop();go(t.dataset.mode)};
+  });
+}
+
+/* ================= game 1: tap & hear ================= */
+function gmIstrazuj(){
+  $('#app').innerHTML=topbar('Dodirni i čuj')+catbar()+`
+   <label class="switch"><input type="checkbox" id="sentT"${SENT?' checked':''}><i></i><span>«Ovo je …»</span></label>
+   <div class="hint">Dodirni sliku i poslušaj riječ <span class="en">· Tap a picture and hear the word</span></div>
+   <div class="board" id="board"></div>`;
+  bindTop();bindCatbar(renderBoard);
+  $('#sentT').onchange=e=>{SENT=e.target.checked;localStorage.setItem('rijSent',SENT?'1':'0')};
+  renderBoard();
+}
+function renderBoard(){
+  const cat=CATS.find(c=>c.id===G.cat);
+  $('#board').innerHTML=cat.items.map(it=>`<div class="card" data-w="${esc(it.word)}">${renderArt(it)}<div class="lbl">${it.word}</div></div>`).join('');
+  document.querySelectorAll('#board .card').forEach(c=>c.addEventListener('click',()=>{
+    const w=c.dataset.w;
+    bumpEl(c);burstFrom(c,8);sfx.pop();
+    const say=(SENT&&cat.id!=='br')?('Ovo je '+w):w;
+    showWord(w,say);
+  }));
+}
+
+/* ================= game 2: what is this? ================= */
+function gmSta(){G.round=0;G.score=0;G.total=8;renderSta()}
+function renderSta(){
+  clearTimers();
+  const correct=pick(catItems());
+  const opts=shuffle([correct,...sample(without(catItems(),correct),2)]);
+  G.ans=correct.word;G.lock=false;
+  $('#app').innerHTML=topbar('Šta je ovo?')+catbar()+`
+   <div class="prog" id="prog"></div>
+   <div class="hint">Pogledaj sliku i dodirni pravu riječ <span class="en">· Look and tap the right word</span></div>
+   <div class="stage" id="stagec"><div class="stage-art">${renderArt(correct)}</div></div>
+   <div class="chips">${opts.map(o=>`<button class="chip" data-w="${esc(o.word)}">${o.word}</button>`).join('')}</div>`;
+  bindTop();bindCatbar(()=>{G.round=0;G.score=0;renderSta()});
+  updProg();
+  document.querySelectorAll('.chip').forEach(ch=>ch.addEventListener('click',()=>{
+    if(G.lock)return;
+    if(ch.dataset.w===G.ans){
+      G.lock=true;ch.classList.add('ok');sfx.good();
+      G.score++;updProg();burstFrom(ch,14);bumpEl($('#stagec'));showWord(G.ans);
+      later(()=>{G.round++;G.round>=G.total?finish():renderSta()},1750);
+    }else{
+      sfx.bad();ch.classList.add('shake');setTimeout(()=>ch.classList.remove('shake'),500);ch.classList.add('dim');
+    }
+  }));
+}
+
+/* ================= game 3: listen & find ================= */
+function gmSlu(){G.round=0;G.score=0;G.total=8;renderSlu()}
+function renderSlu(){
+  clearTimers();hideBubble();
+  const correct=pick(catItems());
+  const opts=shuffle([correct,...sample(without(catItems(),correct),3)]);
+  G.ans=correct.word;G.lock=false;
+  $('#app').innerHTML=topbar('Slušaj i nađi')+catbar()+`
+   <div class="prog" id="prog"></div>
+   <div class="hint">Dodirni sliku koju čuješ <span class="en">· Tap the picture you hear</span></div>
+   <div class="listen-top">
+     <button class="speakbtn" id="sayBtn" aria-label="Ponovi">${ICONS.speaker}</button>
+     <div class="mini-parrot">${PARROT}</div>
+   </div>
+   <div class="saycap">Ponovi · Repeat</div>
+   <div class="picgrid">${opts.map(o=>`<button class="pcard" data-w="${esc(o.word)}">${renderArt(o)}</button>`).join('')}</div>`;
+  bindTop();bindCatbar(()=>{G.round=0;G.score=0;renderSlu()});
+  updProg();
+  $('#sayBtn').onclick=()=>{sfx.flip();speak(correct.word)};
+  later(()=>speak(correct.word),450);
+  document.querySelectorAll('.pcard').forEach(p=>p.addEventListener('click',()=>{
+    if(G.lock)return;
+    if(p.dataset.w===G.ans){
+      G.lock=true;p.classList.add('ok');bumpEl(p);sfx.good();
+      G.score++;updProg();burstFrom(p,14);showWord(G.ans);
+      later(()=>{G.round++;G.round>=G.total?finish():renderSlu()},1750);
+    }else{
+      sfx.bad();p.classList.add('shake');setTimeout(()=>p.classList.remove('shake'),500);
+    }
+  }));
+}
+
+/* ================= game 4: memory pairs ================= */
+function gmPar(){
+  clearTimers();hideBubble();
+  G.total=6;G.score=0;G.first=null;G.lock=false;
+  const picks=sample([...CATS[0].items,...CATS[1].items],6);
+  const deck=shuffle(picks.flatMap(p=>[p,p]));
+  $('#app').innerHTML=topbar('Parovi')+`
+   <div class="prog" id="prog"></div>
+   <div class="hint">Nađi parove sličica <span class="en">· Find the matching pairs</span></div>
+   <div class="memgrid">${deck.map((it)=>`
+     <button class="mcard" data-w="${esc(it.word)}" aria-label="karta">
+       <span class="min">
+         <span class="mface backc">${star(false,38)}</span>
+         <span class="mface frontc">${renderArt(it)}<span class="mlbl">${it.word}</span></span>
+       </span>
+     </button>`).join('')}</div>`;
+  bindTop();updProg();
+  document.querySelectorAll('.mcard').forEach(c=>c.addEventListener('click',()=>{
+    if(G.lock||c.classList.contains('flip')||c.classList.contains('done'))return;
+    c.classList.add('flip');sfx.flip();
+    if(!G.first){G.first=c;return}
+    const a=G.first,b=c;G.first=null;
+    if(a.dataset.w===b.dataset.w){
+      G.score++;updProg();sfx.good();
+      a.classList.add('done');b.classList.add('done');
+      burstFrom(b,12);showWord(b.dataset.w);
+      if(G.score>=G.total)later(finish,1400);
+    }else{
+      G.lock=true;
+      later(()=>{a.classList.remove('flip');b.classList.remove('flip');G.lock=false},800);
+    }
+  }));
+}
+
+/* ================= game 5: counting (tap-to-count!) ================= */
+const SLOTS=[[20,26],[52,16],[78,34],[32,54],[48,40],[64,58],[14,72],[46,80],[80,76],[90,56]];
+const jit=()=>(Math.random()*8-4).toFixed(1);
+function gmBr(){G.round=0;G.score=0;G.total=6;G.lastN=-1;renderBr()}
+function renderBr(){
+  clearTimers();hideBubble();
+  let n;do{n=1+Math.floor(Math.random()*8)}while(n===G.lastN);
+  G.lastN=n;G.n=n;G.tapped=0;
+  const fruit=pick(CATS[1].items.filter(i=>['jabuka','jagoda','limun'].includes(i.word)));
+  const slots=shuffle(SLOTS).slice(0,n);
+  const set=new Set([n]);while(set.size<3)set.add(1+Math.floor(Math.random()*NUMWORDS.length));
+  $('#app').innerHTML=topbar('Brojimo')+`
+   <div class="prog" id="prog"></div>
+   <div class="hint">Dodirni ih jedan po jedan i prebroji! <span class="en">· Tap them one by one to count!</span></div>
+   <div class="countbox">
+     ${slots.map(([x,y])=>`<span class="cnt" style="left:${+x+ +jit()}%;top:${+y+ +jit()}%;--r:${(Math.random()*36-18)|0}deg">${renderArt(fruit)}</span>`).join('')}
+     <button class="icon-btn small cnt-say" id="sayBtn" aria-label="Ponovi pitanje">${ICONS.speaker}</button>
+   </div>
+   <div class="chips">${shuffle([...set]).map(m=>`<button class="chip num" data-n="${m}">${m}</button>`).join('')}</div>`;
+  bindTop();updProg();
+  $('#sayBtn').onclick=()=>{sfx.flip();speak('Koliko ih ima?')};
+  later(()=>speak('Koliko ih ima?'),350);
+  document.querySelectorAll('.cnt').forEach(c=>c.addEventListener('click',()=>{
+    if(c.classList.contains('counted'))return;
+    c.classList.add('counted');
+    G.tapped++;
+    c.insertAdjacentHTML('beforeend',`<span class="cbadge">${G.tapped}</span>`);
+    bumpEl(c);sfx.pop();
+    speak(NUMWORDS[G.tapped-1]);
+    if(G.tapped===G.n)later(()=>burstFrom(c,10),400);
+  }));
+  document.querySelectorAll('.chip.num').forEach(ch=>ch.addEventListener('click',()=>{
+    if(G.lock)return;
+    if(+ch.dataset.n===G.n){
+      G.lock=true;ch.classList.add('ok');sfx.good();
+      G.score++;updProg();burstFrom(ch,14);showWord(NUMWORDS[G.n-1]);
+      later(()=>{G.round++;G.round>=G.total?finish():renderBr()},1900);
+    }else{
+      sfx.bad();ch.classList.add('shake');setTimeout(()=>ch.classList.remove('shake'),500);ch.classList.add('dim');
+    }
+  }));
+}
+
+/* ================= alphabet ================= */
+function gmAbc(){
+  $('#app').innerHTML=topbar('Abeceda')+`
+   <div class="hint">Bosanska abeceda ima 30 slova <span class="en">· The Bosnian alphabet has 30 letters</span></div>
+   <div class="abctools"><button class="btn" id="abcPlay">${ICONS.speaker}<span>Poslušaj abecedu</span></button></div>
+   <div class="abcgrid">${ABC.map((L,i)=>`
+     <button class="atile" data-i="${i}" aria-label="slovo ${esc(L.l)}">
+       <span class="al" style="color:${PALL[i%PALL.length]}">${L.l}</span>
+       <span class="aa">${L.art}</span>
+       <span class="aw">${L.w}</span>
+     </button>`).join('')}</div>`;
+  bindTop();
+  $('#abcPlay').onclick=playABC;
+  document.querySelectorAll('.atile').forEach(t=>t.onclick=()=>{
+    if(G.singing)stopABC();
+    const L=ABC[+t.dataset.i];
+    sfx.pop();bumpEl(t);burstFrom(t,6);
+    showWord(L.w,`${L.n}. ${L.w}`);
+  });
+}
+function stopABC(){
+  G.singing=false;
+  document.querySelectorAll('.atile.sing').forEach(t=>t.classList.remove('sing'));
+  const b=$('#abcPlay');
+  if(b){b.innerHTML=`${ICONS.speaker}<span>Poslušaj abecedu</span>`}
+}
+function playABC(){
+  if(G.singing){stopABC();return}
+  G.singing=true;G.singI=0;
+  const b=$('#abcPlay');
+  if(b)b.innerHTML=`${ICONS.close}<span>Stani · Stop</span>`;
+  stepABC();
+}
+function stepABC(){
+  if(!G.singing)return;
+  if(G.singI>=ABC.length){
+    stopABC();sfx.win();confettiRain();
+    speak('Bravo! Znaš cijelu abecedu!');
+    return;
+  }
+  const tiles=document.querySelectorAll('.atile');
+  tiles.forEach((t,i)=>t.classList.toggle('sing',i===G.singI));
+  const el=tiles[G.singI];
+  if(el&&el.scrollIntoView)el.scrollIntoView({block:'nearest',behavior:'smooth'});
+  const L=ABC[G.singI];
+  showWord(L.w,`${L.n}. ${L.w}`,1);
+  G.singI++;
+  later(stepABC,1750);
+}
+
+/* ================= sentences: listen & build ================= */
+function gmRec(){
+  $('#app').innerHTML=topbar('Rečenice')+`
+   <div class="catbar" id="recbar" style="--pbg:#3572d6;--pfg:#fffdf6">
+     <button class="pill on" data-v="list">Slušaj <span class="en">· Listen</span></button>
+     <button class="pill" data-v="build">Složi <span class="en">· Build</span></button>
+   </div>
+   <div id="recbody"></div>`;
+  bindTop();
+  document.querySelectorAll('#recbar .pill').forEach(p=>p.onclick=()=>{
+    document.querySelectorAll('#recbar .pill').forEach(x=>x.classList.toggle('on',x===p));
+    sfx.flip();
+    p.dataset.v==='list'?renderSentList():startBuild();
+  });
+  renderSentList();
+}
+function renderSentList(){
+  clearTimers();hideBubble();
+  $('#recbody').innerHTML=`<div class="hint">Dodirni pojedinačne riječi ili cijelu rečenicu <span class="en">· Tap single words or the whole sentence</span></div>`+
+   SENTLIST.map(it=>{
+    const ws=cleanWords(it.s);
+    return `<div class="scard">
+      <span class="sart">${it.art}</span>
+      <span class="stx">
+        <span class="swords">${ws.map(w=>`<button class="sword" data-w="${esc(w)}">${w}</button>`).join('')}</span>
+        <span class="sen">${it.en}</span>
+      </span>
+      <button class="icon-btn small splay" data-s="${esc(it.s)}" aria-label="Poslušaj rečenicu">${ICONS.speaker}</button>
+    </div>`;
+   }).join('');
+  document.querySelectorAll('.sword').forEach(b=>b.onclick=()=>{sfx.pop();speak(b.dataset.w)});
+  document.querySelectorAll('.splay').forEach(b=>b.onclick=()=>{sfx.flip();speak(b.dataset.s,.82)});
+}
+function startBuild(){
+  clearTimers();hideBubble();
+  G.total=5;G.score=0;G.round=0;
+  G.b={list:sample(SENTLIST.filter(x=>cleanWords(x.s).length>=2),5)};
+  nextBuildRound();
+}
+function nextBuildRound(){
+  const b=G.b;
+  b.it=b.list[G.round];
+  b.words=shuffle(cleanWords(b.it.s));
+  b.left=[...b.words];
+  b.placed=[];b.lock=false;
+  renderBuild();
+  later(()=>speak(b.it.s,.82),450);
+}
+function renderBuild(){
+  const b=G.b,target=cleanWords(b.it.s),done=b.placed.length;
+  $('#app').innerHTML=topbar('Složi rečenicu')+`
+   <div class="prog" id="prog"></div>
+   <div class="hint">Poslušaj i dodirni riječi u pravom redoslijedu <span class="en">· Listen and tap the words in order</span></div>
+   <div class="stage" style="width:min(230px,62vw);padding:16px"><div class="stage-art">${b.it.art}</div></div>
+   <div class="bline" id="bline">${target.map((w,i)=>i<done?`<span class="bfill">${w}</span>`:`<span class="bslot"></span>`).join('')}</div>
+   <div style="text-align:center"><button class="icon-btn small brep" id="repBtn" aria-label="Ponovi">${ICONS.speaker}</button></div>
+   <div class="chips">${b.left.map(w=>`<button class="chip" data-w="${esc(w)}">${w}</button>`).join('')}</div>`;
+  bindTop();updProg();
+  $('#repBtn').onclick=()=>{sfx.flip();speak(b.it.s,.82)};
+  document.querySelectorAll('.chips .chip').forEach(ch=>ch.addEventListener('click',()=>{
+    if(b.lock)return;
+    if(ch.dataset.w===target[done]){
+      b.placed.push(ch.dataset.w);
+      b.left.splice(b.left.indexOf(ch.dataset.w),1);
+      sfx.pop();speak(ch.dataset.w);
+      renderBuild();
+      if(b.placed.length===target.length){
+        b.lock=true;G.score++;updProg();sfx.good();
+        burstFrom($('#bline'),16);
+        later(()=>speak(b.it.s,.82),650);
+        later(()=>{G.round++;G.round>=G.total?finish():nextBuildRound()},2200);
+      }
+    }else{
+      sfx.bad();ch.classList.add('shake');setTimeout(()=>ch.classList.remove('shake'),500);
+    }
+  }));
+}
+
+/* ================= completion ================= */
+function finish(){
+  const total=G.total,sc=G.score||total,m=G.mode;
+  saveStars();
+  sfx.win();confettiRain();
+  $('#overlay').innerHTML=`<div class="ovcard">
+    <div class="ovstars">${[0,1,2].map(i=>`<span class="ovstar" style="animation-delay:${200+i*180}ms">${star(true,46)}</span>`).join('')}</div>
+    <div class="ovtitle">${letters('Bravo!',true)}</div>
+    <div class="ovsub">Zvjezdice: ${sc}/${total} · Stars: ${sc}/${total}</div>
+    <div class="ovbtns">
+      <button class="btn" id="againBtn">${ICONS.replay} Još jednom</button>
+      <button class="btn alt" id="homeBtn">Početna</button>
+    </div></div>`;
+  $('#overlay').classList.remove('hidden');
+  $('#againBtn').onclick=()=>{sfx.pop();go(m)};
+  $('#homeBtn').onclick=()=>{sfx.flip();go('home')};
+}
+
+/* ================= settings ================= */
+function openSettings(){
+  const m=$('#settings');m.classList.remove('hidden');
+  const noBos=('speechSynthesis' in window)&&voices.length&&!hasBos;
+  m.innerHTML=`<div class="mcard2">
+    <div class="mhead"><h3>Postavke <span class="en">· Settings</span></h3><button class="icon-btn small" id="closeSet" aria-label="Zatvori">${ICONS.close}</button></div>
+    <label class="mlab">Glas <span class="en">· Voice</span></label>
+    <select class="sel" id="voiceSel">
+      <option value="">Auto — najbolji nađeni / best match</option>
+      ${voices.map(v=>`<option value="${esc(v.name)}"${v.name===voiceName?' selected':''}>${esc(v.name)} (${v.lang})</option>`).join('')}
+    </select>
+    ${!('speechSynthesis' in window)
+      ?'<p class="note">Ovaj preglednik ne podržava govor.<br><span class="en">This browser does not support speech.</span></p>'
+      :noBos?'<p class="note">Na uređaju nema bosanskog glasa — koristi se najbliži.<br><span class="en">No Bosnian voice found on this device — the closest match is used. Installing a Bosnian/Croatian voice gives the best pronunciation.</span></p>':''}
+    <div class="mrow"><span>Zvučni efekti <span class="en">Sound effects</span></span><label class="sw"><input type="checkbox" id="swSfx"${SFXON?' checked':''}><i></i></label></div>
+    <div class="mrow"><span>Govor <span class="en">Narration</span></span><label class="sw"><input type="checkbox" id="swTts"${TTSON?' checked':''}><i></i></label></div>
+    <button class="btn" id="tryV">${ICONS.speaker} <span>Probaj glas · Try</span></button>
+  </div>`;
+  $('#closeSet').onclick=closeSettings;
+  $('#voiceSel').onchange=e=>{voiceName=e.target.value;localStorage.setItem('rijVoice',voiceName);speak('Zdravo! Ja sam Riječica.')};
+  $('#swSfx').onchange=e=>{SFXON=e.target.checked;localStorage.setItem('rijSfx',SFXON?'1':'0');if(SFXON)sfx.pop()};
+  $('#swTts').onchange=e=>{TTSON=e.target.checked;localStorage.setItem('rijTts',TTSON?'1':'0');if(TTSON)speak('Zdravo!')};
+  $('#tryV').onclick=()=>speak('Zdravo! Ja sam Riječica. Hajde da učimo bosanski!');
+  m.onclick=e=>{if(e.target===m)closeSettings()};
+}
+function closeSettings(){$('#settings').classList.add('hidden')}
+
+/* ================= static chrome & init ================= */
+function initChrome(){
+  document.body.insertAdjacentHTML('beforeend',`
+   <div id="bubble" class="hidden"><span class="bpar">${PARROT}</span><span id="bword" class="bword"></span>
+     <button class="icon-btn small" id="breplay" aria-label="Ponovi">${ICONS.replay}</button></div>
+   <div id="overlay" class="modal hidden"></div>
+   <div id="settings" class="modal hidden"></div>
+   <div id="toast"></div>
+   <div class="fabs">
+     <button class="icon-btn" id="muteBtn" aria-label="Zvuk">${MUTED?ICONS.speakerOff:ICONS.speaker}</button>
+     <button class="icon-btn" id="setBtn" aria-label="Postavke">${ICONS.sliders}</button>
+   </div>`);
+  $('#breplay').onclick=()=>{const t=$('#bubble').dataset.say;if(t){sfx.flip();speak(t)}};
+  $('#setBtn').onclick=()=>{sfx.flip();openSettings()};
+  $('#muteBtn').onclick=()=>{
+    MUTED=!MUTED;localStorage.setItem('rijMute',MUTED?'1':'0');
+    $('#muteBtn').innerHTML=MUTED?ICONS.speakerOff:ICONS.speaker;
+    if(MUTED)cancelSpeech();
+    toast(MUTED?'Zvuk isključen · Sound off':'Zvuk uključen · Sound on');
+    if(!MUTED)sfx.pop();
+  };
+}
+function buildDoodles(){
+  const shapes={
+    star:'<path d="M20 3 24.7 14.7 37 15.7 27.7 24 30.7 36 20 29.6 9.3 36 12.3 24 3 15.7 15.3 14.7z"/>',
+    squig:'<path d="M3 26 q8 -18 17 0 t17 0"/>',
+    circle:'<circle cx="20" cy="20" r="12"/>',
+    heart:'<path d="M20 33 C7 23 8 9 20 15 C32 9 33 23 20 33z"/>',
+    zig:'<path d="M4 29 L12 11 20 29 28 11 36 29"/>'
+  };
+  const list=[[7,12,'squig',62,-12,0],[88,8,'star',44,12,-2],[92,72,'circle',38,0,-4],
+              [4,55,'heart',46,-8,1],[50,3,'zig',54,6,-6],[20,88,'star',34,10,3]];
+  $('#doodles').innerHTML=list.map(([x,y,s,sz,r,d],i)=>
+    `<svg class="dood" style="left:${x}%;top:${y}%;--r:${r}deg;animation-delay:${d}s;animation-duration:${6+i}s" width="${sz}" height="${sz}" viewBox="0 0 40 40" fill="none" stroke="${INK}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">${shapes[s]}</svg>`).join('');
+}
+
+const BUILD={istrazuj:gmIstrazuj,sta:gmSta,slu:gmSlu,par:gmPar,br:gmBr,abc:gmAbc,rec:gmRec};
+initChrome();
+buildDoodles();
+go('home');
+/* a one-time hello from the parrot on the very first touch */
+document.addEventListener('pointerdown',()=>speak('Zdravo! Ja sam Riječica. Hajde da učimo bosanski!'),{once:true,capture:true});
+</script>
+</body>
+</html>
